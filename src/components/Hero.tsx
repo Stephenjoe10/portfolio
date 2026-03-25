@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Smartphone, Code2 } from 'lucide-react';
-import myImage from "../assets/Stephen A.JPG"
+import { Download, Smartphone, Code2 } from 'lucide-react';
+// import myImage from "../assets/Stephen A.JPG"
 
 export function Hero() {
   return (
