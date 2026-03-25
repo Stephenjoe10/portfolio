@@ -1,4 +1,4 @@
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
 	if (req.method !== "POST") {
 		return res.status(405).json({ message: "Method not allowed" });
 	}
@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
   `;
 
 	try {
-		await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+		const response = await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -25,7 +25,12 @@ export default async function handler(req: any, res: any) {
 			})
 		});
 
-		return res.status(200).json({ success: true });
+		const result = await response.json()
+		if (result?.ok) {
+			return res.status(200).json({ success: true });
+		}
+		return res.status(500).json({ success: false });
+
 	} catch (err) {
 		return res.status(500).json({ success: false });
 	}
