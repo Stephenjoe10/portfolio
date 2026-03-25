@@ -1,18 +1,41 @@
 import { motion } from 'framer-motion';
 import { Send, Mail, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
+import Toast from './toast';
 
 export function Contact() {
-  const [formState, setFormState] = useState('idle');
+  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | "error">('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    setFormState("submitting")
     e.preventDefault();
-    setFormState('submitting');
-    // Simulate API call
-    setTimeout(() => {
-      setFormState('success');
-      setTimeout(() => setFormState('idle'), 3000);
-    }, 1500);
+    const formValue = new FormData(e.target)
+    const response = await fetch("/api/contact", {
+      method: "POST",
+      body: JSON.stringify({
+        name: formValue.get("name"),
+        email: formValue.get("email"),
+        message: formValue.get("message")
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    const result = await response.json()
+    console.log("response", result)
+    if (result.success) {
+      e.target.reset()
+      setFormState("success")
+      setTimeout(() => {
+        setFormState("idle")
+      }, 6000)
+    } else {
+      setFormState("error")
+      setTimeout(() => {
+        setFormState("idle")
+      }, 6000)
+    }
   };
 
   return (
@@ -77,11 +100,11 @@ export function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="name" className="text-sm font-medium text-slate-300">Name</label>
-                  <input type="text" id="name" required className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" />
+                  <input type="text" id="name" name='name' required className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label htmlFor="email" className="text-sm font-medium text-slate-300">Email</label>
-                  <input type="email" id="email" required className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@example.com" />
+                  <input type="email" id="email" name='email' required className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@example.com" />
                 </div>
               </div>
               {/* <div className="flex flex-col gap-2">
@@ -90,14 +113,14 @@ export function Contact() {
               </div> */}
               <div className="flex flex-col gap-2">
                 <label htmlFor="message" className="text-sm font-medium text-slate-300">Message</label>
-                <textarea id="message" required rows={5} className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
+                <textarea id="message" name='message' required rows={5} className="bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
               </div>
               <button
                 type="submit"
                 disabled={formState !== 'idle'}
                 className="mt-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-70"
               >
-                {formState === 'idle' && <><Send className="w-5 h-5" /> Send Message</>}
+                {(formState === 'idle' || formState === 'error') && <><Send className="w-5 h-5" /> Send Message</>}
                 {formState === 'submitting' && <span className="animate-pulse">Sending...</span>}
                 {formState === 'success' && <span>Message Sent!</span>}
               </button>
@@ -105,6 +128,10 @@ export function Contact() {
           </motion.div>
         </div>
       </div>
+
+
+      <Toast show={formState === 'success'} message="Your message has been sent successfully. Thank you for reaching out! 🎉" />
+      <Toast show={formState === 'error'} message="Something went wrong. Please try again later!" />
     </section>
   );
 }
