@@ -10,7 +10,7 @@ export function Contact() {
     setFormState("submitting")
     e.preventDefault();
     const formValue = new FormData(e.target)
-    const response = await fetch("/api/contact", {
+    const response = await fetch("/api/contactApi", {
       method: "POST",
       body: JSON.stringify({
         name: formValue.get("name"),
