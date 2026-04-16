@@ -2,7 +2,7 @@
 
 declare namespace NodeJS {
 	interface ProcessEnv {
-		SANITY_PROJECT_ID: string
-		SANITY_VERSION: string
+		NEXT_PUBLIC_SANITY_PROJECT_ID: string
+		NEXT_PUBLIC_SANITY_VERSION: string
 	}
 }

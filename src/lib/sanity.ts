@@ -3,10 +3,10 @@ import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url
 
 
 let productionClient = {
-	projectId: process.env.SANITY_PROJECT_ID,
+	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
 	dataset: "production",
 	useCdn: true,
-	apiVersion: process.env.SANITY_VERSION,
+	apiVersion: process.env.NEXT_PUBLIC_SANITY_VERSION,
 }
 
 const client = createClient(productionClient)
