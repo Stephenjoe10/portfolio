@@ -2,8 +2,15 @@ import { motion } from 'framer-motion';
 import { Send, Mail, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
 import Toast from './toast';
+import type { Portfolio } from '../lib/type';
+import { getResponse } from '../lib/utils';
+import { HighLightedText } from './highlightedText';
 
 export function Contact() {
+
+  const response: Portfolio = getResponse()
+  const { contact: { heading, subHeading }, email, phone, address } = response
+
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | "error">('idle');
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -23,7 +30,6 @@ export function Contact() {
     })
 
     const result = await response.json()
-    console.log("response", result)
     if (result.success) {
       e.target.reset()
       setFormState("success")
@@ -34,7 +40,7 @@ export function Contact() {
       setFormState("error")
       setTimeout(() => {
         setFormState("idle")
-      }, 6000)
+      }, 5000)
     }
   };
 
@@ -47,8 +53,13 @@ export function Contact() {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Let's <span className="text-gradient">Connect</span></h2>
-          <p className="text-slate-400 text-lg">Have a project in mind? I'd love to hear about it.</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <HighLightedText
+              text={heading}
+              highlightStyle="text-gradient"
+            />
+          </h2>
+          <p className="text-slate-400 text-lg">{subHeading}</p>
         </motion.div>
 
         <div className="flex flex-col md:flex-row gap-12">
@@ -65,7 +76,7 @@ export function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-semibold mb-1">Email</h4>
-                <p className="text-slate-400">hello@example.com</p>
+                <p className="text-slate-400">{email}</p>
               </div>
             </div>
             <div className="glass-card p-6 flex items-start gap-4">
@@ -74,7 +85,7 @@ export function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-semibold mb-1">Based In</h4>
-                <p className="text-slate-400">San Francisco, CA</p>
+                <p className="text-slate-400">{address}</p>
               </div>
             </div>
             <div className="glass-card p-6 flex items-start gap-4">
@@ -83,7 +94,7 @@ export function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-semibold mb-1">Phone</h4>
-                <p className="text-slate-400">+1 (555) 123-4567</p>
+                <p className="text-slate-400">+91 {phone}</p>
               </div>
             </div>
           </motion.div>

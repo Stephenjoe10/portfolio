@@ -1,8 +1,32 @@
 import { motion } from 'framer-motion';
 import { Download, Smartphone, Code2 } from 'lucide-react';
-// import myImage from "../assets/Stephen A.JPG"
+import { getResponse } from '../lib/utils';
+import type { Portfolio } from '../lib/type';
+import { getFileUrl, imageUrl } from '../lib/sanity';
+import { HighLightedText } from './highlightedText';
 
 export function Hero() {
+
+  const response: Portfolio = getResponse()
+  const { header: { mainText, subText1, subText2, experience, image }, resume } = response
+
+
+  const forceDownload = async () => {
+    const url = getFileUrl(resume?.asset?._ref)
+
+    const response = await fetch(url)
+    const blob = await response?.blob()
+    const blobUrl = window.URL.createObjectURL(blob)
+
+    const link = document.createElement("a")
+    link.href = blobUrl
+    link.download = "Resume.pdf"
+    link.click()
+
+    link.remove()
+    window.URL.revokeObjectURL(blobUrl)
+  }
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-2 lg:pt-24 lg:pb-10">
       {/* Dynamic Background */}
@@ -22,11 +46,11 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[6rem] font-black tracking-tighter mb-6 leading-[1.05]"
             >
-              Building <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">
-                Next-Gen
-              </span><br />
-              Mobile Apps.
+              <HighLightedText
+                text={mainText}
+                br
+                highlightStyle="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400"
+              />
             </motion.h1>
 
             <motion.p
@@ -35,7 +59,10 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
               className="text-lg md:text-xl text-slate-400 mb-10 max-w-lg leading-relaxed font-light"
             >
-              I merge stunning designs with flawless native performance. Delivering unparalleled mobile ecosystems with <strong className="text-slate-200 font-semibold">3.6 years of expertise.</strong>
+              <HighLightedText
+                text={subText1}
+                highlightStyle="text-slate-200 font-semibold"
+              />
             </motion.p>
 
             <motion.div
@@ -44,13 +71,6 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
               className="flex flex-col sm:flex-row items-center gap-5"
             >
-              {/* <a
-                href="#projects"
-                className="relative px-8 py-4 bg-white text-black font-bold rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)]"
-              >
-                Let's Talk
-                <ArrowRight className="w-5 h-5" />
-              </a> */}
               {/* Refined React Native Expert Badge */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
@@ -73,13 +93,13 @@ export function Hero() {
                   </span>
                 </div>
               </motion.div>
-              <a
-                href="#"
+              <button
+                onClick={forceDownload}
                 className="px-8 py-4 bg-transparent border border-white/20 text-white font-semibold rounded-2xl hover:bg-white/5 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto"
               >
                 Download CV
                 <Download className="w-4 h-4" />
-              </a>
+              </button>
             </motion.div>
           </div>
 
@@ -103,7 +123,7 @@ export function Hero() {
                 {/* Changed image placeholder to a more abstract/cool developer concept */}
                 <img
                   src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                  // src={myImage}
+                  // src={imageUrl(image).url()}
                   alt="Modern Developer Element"
                   className="w-full h-full object-cover scale-110"
                 />
@@ -116,12 +136,15 @@ export function Hero() {
                 className="absolute -bottom-8 -left-6 sm:-left-16 glass px-6 py-5 rounded-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 z-20 backdrop-blur-xl bg-slate-900/70"
               >
                 <div className="flex flex-col">
-                  <span className="text-4xl xl:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 leading-none">3.6</span>
+                  <span className="text-4xl xl:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 leading-none">{experience}</span>
                   <span className="text-sm border-t border-white/20 pt-1 font-bold text-white tracking-widest mt-2">YEARS</span>
                 </div>
                 <div className="w-px h-16 bg-white/20" />
                 <p className="text-xs text-slate-300 font-medium leading-tight">
-                  Of building<br />world-class<br />Native Apps
+                  <HighLightedText
+                    text={subText2}
+                    br
+                  />
                 </p>
               </motion.div>
 
