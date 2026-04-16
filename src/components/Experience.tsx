@@ -5,24 +5,6 @@ import type { Portfolio } from '../lib/type';
 import { getResponse } from '../lib/utils';
 import { HighLightedText } from './highlightedText';
 
-const projects = [
-  {
-    period: '2025 - 2026',
-    title: 'POS App Development',
-    description: 'Developed and optimized a comprehensive Point of Sale (POS) application featuring hardware integrations and high-speed checkout flows.'
-  },
-  {
-    period: '2024 - 2025',
-    title: 'Workforce & Payroll App',
-    description: 'Architected a mobile solution for managing workforce logistics, employee scheduling, and complex payroll calculations.'
-  },
-  {
-    period: '2023 - 2024',
-    title: 'Admin App',
-    description: 'Built a robust administrative dashboard application for internal tracking, user management, and automated reporting.'
-  }
-];
-
 export function Experience() {
 
   const response: Portfolio = getResponse()
