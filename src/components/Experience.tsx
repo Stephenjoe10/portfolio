@@ -54,7 +54,7 @@ export function Experience() {
               </div>
               <h3 className="text-3xl md:text-4xl font-black text-white mb-2">React Native Developer</h3>
               <h4 className="text-xl md:text-2xl text-slate-300 font-medium flex items-center gap-2">
-                <Building2 className="w-6 h-6 text-indigo-400" /> XXX Company
+                <Building2 className="w-6 h-6 text-indigo-400" /> Centizen Inc
               </h4>
             </div>
 

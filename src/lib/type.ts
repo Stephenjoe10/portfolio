@@ -50,6 +50,7 @@ export type Portfolio = {
 			technologies: string[];
 			apk?: SanityFile;
 			github?: string;
+			domainUrl?: string
 			images: SanityImage[];
 		}[];
 	};
